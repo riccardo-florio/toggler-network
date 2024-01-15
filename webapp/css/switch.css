@@ -1,4 +1,5 @@
 .switch {
+    margin-left: 30px;
     position: relative;
     display: inline-block;
     width: 60px;
@@ -36,11 +37,11 @@
 }
 
 input:checked+.slider {
-    background-color: #2196F3;
+    background-color: var(--colorePrincipale);
 }
 
 input:focus+.slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px var(--colorePrincipale);
 }
 
 input:checked+.slider:before {

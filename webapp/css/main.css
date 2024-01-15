@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Wix+Madefor+Display:wght@400;500;600;700;800&display=swap');
+@import url('search.css');
+@import url('switch.css');
+
+:root {
+    --colorePrincipale: #2196F3;
+}
 
 * {
     padding: 0px;
@@ -14,10 +20,16 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    gap: 40px;
+}
+
+.togglers {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
-.led-container {
+.toggle-container {
     display: flex;
     align-items: center;
     gap: 10px;
