@@ -7,16 +7,29 @@
     <title>Toggler Network</title>
 
     <link rel="stylesheet" href="switch.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
-    
-    <label class="switch">
-        <input type="checkbox" id="cb1" onclick="toggle(this.id)">
-        <span class="slider round"></span>
-    </label>
+    <h2>Lista dei dispositivi nella rete</h2>
+
+    <div class="togglers">
+        <!-- <div class="led-container">
+            <label class="switch">
+                <input type="checkbox" id="cb1" onclick="toggle(this.id)">
+                <span class="slider round"></span>
+            </label>
+            <h3>Led 1</h3>
+            |
+            <h4>Stato: </h4>
+            <p>Off</p>
+        </div> -->
+    </div>
+
+    <button onclick="cercaDispositivi()">cerca</button>
 </body>
 
+<script src="cerca.js"></script>
 <script src="toggle.js"></script>
 
 </html>

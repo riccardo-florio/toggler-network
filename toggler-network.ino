@@ -16,6 +16,8 @@
 const char* ssid = "iliadbox-109322";
 const char* password = "w7sbzq6wkcqnnwtbqntxhs";
 
+const char* hostname = "toggler1"; //indica esp8266.local
+
 ESP8266WebServer server(80);
 
 void setCrossOrigin() {
@@ -31,11 +33,11 @@ void getHelloWord() {
   DynamicJsonDocument doc(512);
   doc["name"] = "Hello world";
 
-  Serial.print(F("Stream..."));
+  //Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, "application/json", buf);
-  Serial.print(F("done."));
+  //Serial.print(F("done."));
 }
 
 // Serving Hello world
@@ -52,26 +54,13 @@ void getSettings() {
   doc["ip"] = WiFi.localIP().toString();
   doc["gw"] = WiFi.gatewayIP().toString();
   doc["nm"] = WiFi.subnetMask().toString();
+  doc["hostname"] = hostname;
 
-  if (server.arg("signalStrength") == "true") {
-    doc["signalStrengh"] = WiFi.RSSI();
-  }
-
-  if (server.arg("chipInfo") == "true") {
-    doc["chipId"] = ESP.getChipId();
-    doc["flashChipId"] = ESP.getFlashChipId();
-    doc["flashChipSize"] = ESP.getFlashChipSize();
-    doc["flashChipRealSize"] = ESP.getFlashChipRealSize();
-  }
-  if (server.arg("freeHeap") == "true") {
-    doc["freeHeap"] = ESP.getFreeHeap();
-  }
-
-  Serial.print(F("Stream..."));
+  //Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, F("application/json"), buf);
-  Serial.print(F("done."));
+  //Serial.print(F("done."));
 }
 
 const int led = LED_BUILTIN;
@@ -92,81 +81,81 @@ void toggleLed() {
     doc["ledStatus"] = "off";
   }
 
-  Serial.print(F("Stream..."));
+  //Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, "application/json", buf);
-  Serial.print(F("done."));
+  //Serial.print(F("done."));
 }
 
-void setSettings() {
-  // expected
-  // {"ip":"192.168.1.129","gw":"192.168.1.1","nm":"255.255.255.0"}
-  Serial.println(F("postConfigFile"));
+// void setSettings() {
+//   // expected
+//   // {"ip":"192.168.1.129","gw":"192.168.1.1","nm":"255.255.255.0"}
+//   //Serial.println(F("postConfigFile"));
 
-  setCrossOrigin();
+//   setCrossOrigin();
 
-  String postBody = server.arg("plain");
-  Serial.println(postBody);
+//   String postBody = server.arg("plain");
+//   Serial.println(postBody);
 
-  DynamicJsonDocument doc(512);
-  DeserializationError error = deserializeJson(doc, postBody);
-  if (error) {
-    // if the file didn't open, print an error:
-    Serial.print(F("Error parsing JSON "));
-    Serial.println(error.c_str());
+//   DynamicJsonDocument doc(512);
+//   DeserializationError error = deserializeJson(doc, postBody);
+//   if (error) {
+//     // if the file didn't open, print an error:
+//     Serial.print(F("Error parsing JSON "));
+//     Serial.println(error.c_str());
 
-    String msg = error.c_str();
+//     String msg = error.c_str();
 
-    server.send(400, F("text/html"), "Error in parsin json body! <br>" + msg);
+//     server.send(400, F("text/html"), "Error in parsin json body! <br>" + msg);
 
-  } else {
-    JsonObject postObj = doc.as<JsonObject>();
+//   } else {
+//     JsonObject postObj = doc.as<JsonObject>();
 
-    Serial.print(F("HTTP Method: "));
-    Serial.println(server.method());
+//     Serial.print(F("HTTP Method: "));
+//     Serial.println(server.method());
 
-    if (server.method() == HTTP_POST) {
-      if ((postObj.containsKey("ip"))) {
+//     if (server.method() == HTTP_POST) {
+//       if ((postObj.containsKey("ip"))) {
 
-        Serial.print(F("Open config file..."));
-        // Here you can open your file to store your config
-        // Now I simulate It and set configFile a true
-        bool configFile = true;
-        if (!configFile) {
-          Serial.println(F("fail."));
-          server.send(304, F("text/html"), F("Fail to store data, can't open file!"));
-        } else {
-          Serial.println(F("done."));
-          const char* address = postObj[F("ip")];
-          const char* gatway = postObj[F("gw")];
-          const char* netMask = postObj[F("nm")];
+//         Serial.print(F("Open config file..."));
+//         // Here you can open your file to store your config
+//         // Now I simulate It and set configFile a true
+//         bool configFile = true;
+//         if (!configFile) {
+//           Serial.println(F("fail."));
+//           server.send(304, F("text/html"), F("Fail to store data, can't open file!"));
+//         } else {
+//           Serial.println(F("done."));
+//           const char* address = postObj[F("ip")];
+//           const char* gatway = postObj[F("gw")];
+//           const char* netMask = postObj[F("nm")];
 
-          Serial.print("ip: ");
-          Serial.println(address);
-          Serial.print("gw: ");
-          Serial.println(gatway);
-          Serial.print("nm: ");
-          Serial.println(netMask);
+//           Serial.print("ip: ");
+//           Serial.println(address);
+//           Serial.print("gw: ");
+//           Serial.println(gatway);
+//           Serial.print("nm: ");
+//           Serial.println(netMask);
 
-          //                  server.sendHeader("Content-Length", String(postBody.length()));
-          server.send(201, F("application/json"), postBody);
+//           //                  server.sendHeader("Content-Length", String(postBody.length()));
+//           server.send(201, F("application/json"), postBody);
 
-          //                  Serial.println(F("Sent reset page"));
-          //                    delay(5000);
-          //                    ESP.restart();
-          //                    delay(2000);
-        }
-      } else {
-        server.send(204, F("text/html"), F("No data found, or incorrect!"));
-      }
-    }
-  }
-}
+//           //                  Serial.println(F("Sent reset page"));
+//           //                    delay(5000);
+//           //                    ESP.restart();
+//           //                    delay(2000);
+//         }
+//       } else {
+//         server.send(204, F("text/html"), F("No data found, or incorrect!"));
+//       }
+//     }
+//   }
+// }
 
 
 void sendCrossOriginHeader() {
-  Serial.println(F("sendCORSHeader"));
+  //Serial.println(F("sendCORSHeader"));
   server.sendHeader(F("access-control-allow-credentials"), F("false"));
   setCrossOrigin();
   server.send(204);
@@ -184,7 +173,7 @@ void restServerRouting() {
   server.on(F("/toggleLed"), HTTP_OPTIONS, sendCrossOriginHeader);
   server.on(F("/toggleLed"), HTTP_GET, toggleLed);
 
-  server.on(F("/settings"), HTTP_POST, setSettings);
+  //server.on(F("/settings"), HTTP_POST, setSettings);
 }
 
 // Manage not found URL
@@ -206,10 +195,10 @@ void handleNotFound() {
 void setup(void) {
   pinMode(led, OUTPUT);
 
-  Serial.begin(115200);
+  //Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.println("");
+  //Serial.println("");
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -218,16 +207,16 @@ void setup(void) {
     digitalWrite(led, off);
     delay(250);
   }
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  //Serial.println("");
+  //Serial.print("Connected to ");
+  //Serial.println(ssid);
+  //Serial.print("IP address: ");
+  //Serial.println(WiFi.localIP());
 
   // Activate mDNS this is used to be able to connect to the server
   // with local DNS hostmane esp8266.local
-  if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
+  if (MDNS.begin(hostname)) {
+    //Serial.println("MDNS responder started");
   }
   MDNS.addService("http", "tcp", 80);
 
@@ -237,7 +226,7 @@ void setup(void) {
   server.onNotFound(handleNotFound);
   // Start server
   server.begin();
-  Serial.println("HTTP server started");
+  //Serial.println("HTTP server started");
 }
 
 void loop(void) {
