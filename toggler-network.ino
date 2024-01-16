@@ -63,6 +63,7 @@ void getSettings() {
   //Serial.print(F("done."));
 }
 
+const int relayPin = 2;
 const int led = LED_BUILTIN;
 const char on = LOW;
 const char off = HIGH;
@@ -72,6 +73,7 @@ int statoLED = off; //all'inizio il led è spento
 void toggleLed() {
   statoLED = !statoLED;
   digitalWrite(led, statoLED);
+  digitalWrite(relayPin, statoLED);
 
   setCrossOrigin();
   DynamicJsonDocument doc(512);
@@ -194,6 +196,7 @@ void handleNotFound() {
 
 void setup(void) {
   pinMode(led, OUTPUT);
+  pinMode(relayPin, OUTPUT);
 
   //Serial.begin(115200);
   WiFi.mode(WIFI_STA);
