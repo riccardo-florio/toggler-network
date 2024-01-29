@@ -25,9 +25,11 @@ Nel contesto di questo progetto, lo sketch eseguito non è che un web server di 
 <br><br>
 Dopo aver scritto correttamente lo sketch, è necessario caricarlo sulla scheda. Ci sono varie opzioni, tra cui l'utilizzo dell'<a href="https://www.az-delivery.de/products/esp8266-01s-mit-usb-adapter?ls=en">adattatore USB con ESP8266-01S</a>. Avendo a disposizione una scheda Arduino UNO, è necessario costruire un piccolo circuito:
 <br>
+<div align="center">
 <img width="700" src="img/arduino_seriale_esp8266_bb.jpg">
 <br>
 <img width="700" src="img/arduino_seriale_esp8266_schem.jpg">
+</div>
 
 Come e' possibile notare dallo schema elettrico sono presenti due pulsanti collegati nel seguente modo:
 - __SW Reset__: sul pin RST di ESP8266
@@ -40,4 +42,10 @@ Questo e' necessario in quanto per poter programmare correttamente lo ESP8266-01
 3. Si rilascia il pulsante SW Flash
 
 Si suggerisce di effettuare tale procedura solo alcuni secondi prima dell'inizio del caricamento dello sketch dal PC allo ESP8266-01.
+</div>
+
+## 🌐 Web App
+
+<div align="justify">
+
 </div>
