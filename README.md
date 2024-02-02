@@ -12,7 +12,7 @@ L'idea è quella di usare una serie di moduli ESP8266-01S per realizzare una ret
 
 <div align="justify">
 
-Innanzitutto è necessario programmare il modulo ESP in modo che sia in grado di svolgere azioni particolari stabilite a priori. Ad esempio, si può scrivere uno script dedicato ad estrarre i dati da un sensore ed inviarli all'utente, a comandare un relè, o a gestire un servo motore. Si veda la cartella "[script arduino](script%20arduino)".
+Innanzi tutto è necessario programmare il modulo ESP in modo che sia in grado di svolgere azioni particolari stabilite a priori. Ad esempio, si può scrivere uno script dedicato ad estrarre i dati da un sensore ed inviarli all'utente, a comandare un relè, o a gestire un servo motore. Si veda la cartella "[script arduino](script%20arduino)".
 
 La rete di sensori è gestita da un "controllore" centrale: una semplice paginetta web che invia richieste ai moduli ESP. Si veda "[webapp](webapp)".
 
@@ -26,7 +26,7 @@ La rete di sensori è gestita da un "controllore" centrale: una semplice paginet
 
 È un modulo WIFI programmabile mediante uno sketch Arduino (basato su C/C++) e capace di eseguirlo in autonomia.
 
-Nel contesto di questo progetto, lo sketch eseguito non è che un web server di tipo REST che andrà ad eseguire azioni specifiche in base all'endpoint contattato. Questa parte di codice, infatti è uguale per tutte le tipologie di dispositivi "smart" che stiamo realizzando. Quello che cambia è l'azione specifica eseguita internamente in base, appunto, al compito che tale dispositivo deve svolgere. Una parte ostica nella fase di realizzazione del server REST è stata quella relativa alla gestione delle chiamate CORS. Una documentazione dettaglata riguardo la gestione e l'implementazione di un server di questo tipo è contenuta nella cartella "[documentazione](documentazione)".
+Nel contesto di questo progetto, lo sketch eseguito non è che un server web di tipo REST che andrà a eseguire azioni specifiche in base all'endpoint contattato. Questa parte di codice, infatti, è uguale per tutte le tipologie di dispositivi "smart" che stiamo realizzando. Quello che cambia è l'azione specifica eseguita internamente in base, appunto, al compito che tale dispositivo deve svolgere. Una parte ostica nella fase di realizzazione del server REST è stata quella relativa alla gestione delle chiamate CORS. Una documentazione dettaglata riguardo la gestione e l'implementazione di un server di questo tipo è contenuta nella cartella "[documentazione](documentazione)".
 
 Dopo aver scritto correttamente lo sketch, è necessario caricarlo sulla scheda. Ci sono varie opzioni, tra cui l'utilizzo dell'[adattatore USB con ESP8266-01S](https://www.az-delivery.de/products/esp8266-01s-mit-usb-adapter?ls=en). Avendo a disposizione una scheda Arduino UNO, è necessario costruire un piccolo circuito:
 
@@ -36,12 +36,12 @@ Dopo aver scritto correttamente lo sketch, è necessario caricarlo sulla scheda.
 <img width="700" src="img/arduino_seriale_esp8266_schem.jpg">
 </div>
 
-Come e' possibile notare dallo schema elettrico sono presenti due pulsanti collegati nel seguente modo:
+Come è possibile notare dallo schema elettrico sono presenti due pulsanti collegati nel seguente modo:
 
-- __SW Reset__: sul pin RST di ESP8266
-- __SW Flash__: sul pin GPIO0 di ESP8266
+- **SW Reset**: sul pin RST di ESP8266
+- **SW Flash**: sul pin GPIO0 di ESP8266
 
-Questo e' necessario in quanto per poter programmare correttamente lo ESP8266-01 è necessario portarlo nello stato UART Bootloader. Questo si ottiene con la seguente procedura:
+Questo è necessario in quanto per poter programmare correttamente lo ESP8266-01 è necessario portarlo nello stato UART Bootloader. Questo si ottiene con la seguente procedura:
 
 1. Si mantiene premuto il pulsante SW Flash
 2. Si preme e si rilascia il pulsante SW Reset
@@ -55,7 +55,7 @@ Si suggerisce di effettuare tale procedura solo alcuni secondi prima dell'inizio
 
 <div align="justify">
 
-Per gestire i dispositivi ESP8266 connessi alla rete sfruttiamo la pagina web implementata nella relativa [cartella](webapp). È una semplice pagina HTML che richiama una serie di moduli Javascript.
+Per gestire i dispositivi ESP8266 connessi alla rete sfruttiamo la pagina web implementata nella relativa "[cartella](webapp)". È una semplice pagina HTML che richiama una serie di moduli Javascript.
 
 Quello principale è "[main.js](webapp/modules/main.js)" che opera come una sorta di interfaccia per i metodi implementati negli altri moduli. Un primo metodo, `avviaRicerca()`, si occupa di avviare la ricerca dei dispositivi collegati nella stessa rete del dispositivo su cui viene eseguita la webapp. Si noti che viene eseguito una volta sola al caricamento della pagina, ma può essere anche eseguito alla pressione del tasto di ricerca apposito. Un secondo metodo, `toggle(id)`, permette di accendere o spegnere il led (al momento l'unica funzione implementata nei moduli ESP) con id = *id*.
 
@@ -65,13 +65,13 @@ Quello principale è "[main.js](webapp/modules/main.js)" che opera come una sort
 
 <div align="justify">
 
-Essendo solo una prima versione del proggetto, al momento le funzionalità messe a disposizione da questo sistema sono limitate, ma in futuro la gamma di operazioni che ogni scheda può svolgere sarà più vasta.
+Essendo solo una prima versione del progetto, al momento le funzionalità messe a disposizione da questo sistema sono limitate, ma in futuro la gamma di operazioni che ogni scheda può svolgere sarà più vasta.
 
 Tra le limitazioni attuali, alcune da menzionare sono:
 
-1. Le credenziali del wi-fi devono essere scritte direttamente nel codice di ogni modulo ESP8266, nonostante esso disponga della tecnologia __Smart Link__ sia per dispositivi android che IOS.
+1. Le credenziali del wi-fi devono essere scritte direttamente nel codice di ogni modulo ESP8266, nonostante esso disponga della tecnologia **Smart Link** sia per dispositivi Android che iOS.
 2. Non sono supportati sensori di alcun tipo, ma si può solamente controllare lo stato di un led.
 
-Attualmente mi sto adoperando per migliorare la versione corrente ed implementare nuove funzionalità per le versioni successive
+Attualmente mi sto adoperando per migliorare la versione corrente ed implementare nuove funzionalità per le versioni successive.
 
 </div>
