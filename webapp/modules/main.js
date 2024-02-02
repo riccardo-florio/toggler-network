@@ -13,6 +13,6 @@ function toggle(id) {
     togglePriv(id);
 }//toggle
 
-//imposto la funzione come globale in modo da poterla usare nell'html
+//imposto le funzioni come globali in modo da poterle usare nell'html
 window.avviaRicerca = avviaRicerca;
 window.toggle = toggle;

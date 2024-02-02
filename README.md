@@ -3,15 +3,19 @@
 ## 💡 Idea di partenza
 
 <div align="justify">
+
 L'idea è quella di usare una serie di moduli ESP8266-01S per realizzare una rete di dispositivi "smart", quali sensori, interruttori, pulsanti, e così via.
+
 </div>
 
 ## 🧬 Struttura del progetto
 
 <div align="justify">
-Innanzitutto è necessario programmare il modulo ESP in modo che sia in grado di svolgere azioni particolari stabilite a priori. Ad esempio, si può scrivere uno script dedicato ad estrarre i dati da un sensore ed inviarli all'utente, a comandare un relè, o a gestire un servo motore. Si veda la cartella "<a href="script arduino">script arduino</a>".
-<br><br>
-La rete di sensori è gestita da un "controllore" centrale: una semplice paginetta web che invia richieste ai moduli ESP. Si veda "<a href="webapp">webapp</a>".
+
+Innanzitutto è necessario programmare il modulo ESP in modo che sia in grado di svolgere azioni particolari stabilite a priori. Ad esempio, si può scrivere uno script dedicato ad estrarre i dati da un sensore ed inviarli all'utente, a comandare un relè, o a gestire un servo motore. Si veda la cartella "[script arduino](script%20arduino)".
+
+La rete di sensori è gestita da un "controllore" centrale: una semplice paginetta web che invia richieste ai moduli ESP. Si veda "[webapp](webapp)".
+
 </div>
 
 ## ⚡ Il modulo ESP8266-01S
@@ -19,19 +23,21 @@ La rete di sensori è gestita da un "controllore" centrale: una semplice paginet
 <img src="img/ESP8266-01S.jpg" align="right" alt="ESP8266" width="290">
 
 <div align="justify">
+
 È un modulo WIFI programmabile mediante uno sketch Arduino (basato su C/C++) e capace di eseguirlo in autonomia.
-<br><br>
-Nel contesto di questo progetto, lo sketch eseguito non è che un web server di tipo REST che andrà ad eseguire azioni specifiche in base all'endpoint contattato. Questa parte di codice, infatti è uguale per tutte le tipologie di dispositivi "smart" che stiamo realizzando. Quello che cambia è l'azione specifica eseguita internamente in base, appunto, al compito che tale dispositivo deve svolgere. Una parte ostica nella fase di realizzazione del server REST è stata quella relativa alla gestione delle chiamate CORS. Una documentazione dettaglata riguardo la gestione e l'implementazione di un server di questo tipo è contenuta nella cartella "<a href="documentazione">documentazione</a>".
-<br><br>
-Dopo aver scritto correttamente lo sketch, è necessario caricarlo sulla scheda. Ci sono varie opzioni, tra cui l'utilizzo dell'<a href="https://www.az-delivery.de/products/esp8266-01s-mit-usb-adapter?ls=en">adattatore USB con ESP8266-01S</a>. Avendo a disposizione una scheda Arduino UNO, è necessario costruire un piccolo circuito:
-<br>
+
+Nel contesto di questo progetto, lo sketch eseguito non è che un web server di tipo REST che andrà ad eseguire azioni specifiche in base all'endpoint contattato. Questa parte di codice, infatti è uguale per tutte le tipologie di dispositivi "smart" che stiamo realizzando. Quello che cambia è l'azione specifica eseguita internamente in base, appunto, al compito che tale dispositivo deve svolgere. Una parte ostica nella fase di realizzazione del server REST è stata quella relativa alla gestione delle chiamate CORS. Una documentazione dettaglata riguardo la gestione e l'implementazione di un server di questo tipo è contenuta nella cartella "[documentazione](documentazione)".
+
+Dopo aver scritto correttamente lo sketch, è necessario caricarlo sulla scheda. Ci sono varie opzioni, tra cui l'utilizzo dell'[adattatore USB con ESP8266-01S](https://www.az-delivery.de/products/esp8266-01s-mit-usb-adapter?ls=en). Avendo a disposizione una scheda Arduino UNO, è necessario costruire un piccolo circuito:
+
 <div align="center">
 <img width="700" src="img/arduino_seriale_esp8266_bb.jpg">
-<br>
+<br><br>
 <img width="700" src="img/arduino_seriale_esp8266_schem.jpg">
 </div>
 
 Come e' possibile notare dallo schema elettrico sono presenti due pulsanti collegati nel seguente modo:
+
 - __SW Reset__: sul pin RST di ESP8266
 - __SW Flash__: sul pin GPIO0 di ESP8266
 
@@ -42,10 +48,30 @@ Questo e' necessario in quanto per poter programmare correttamente lo ESP8266-01
 3. Si rilascia il pulsante SW Flash
 
 Si suggerisce di effettuare tale procedura solo alcuni secondi prima dell'inizio del caricamento dello sketch dal PC allo ESP8266-01.
+
 </div>
 
 ## 🌐 Web App
 
 <div align="justify">
+
+Per gestire i dispositivi ESP8266 connessi alla rete sfruttiamo la pagina web implementata nella relativa [cartella](webapp). È una semplice pagina HTML che richiama una serie di moduli Javascript.
+
+Quello principale è "[main.js](webapp/modules/main.js)" che opera come una sorta di interfaccia per i metodi implementati negli altri moduli. Un primo metodo, `avviaRicerca()`, si occupa di avviare la ricerca dei dispositivi collegati nella stessa rete del dispositivo su cui viene eseguita la webapp. Si noti che viene eseguito una volta sola al caricamento della pagina, ma può essere anche eseguito alla pressione del tasto di ricerca apposito. Un secondo metodo, `toggle(id)`, permette di accendere o spegnere il led (al momento l'unica funzione implementata nei moduli ESP) con id = *id*.
+
+</div>
+
+## 📝 Note conclusive
+
+<div align="justify">
+
+Essendo solo una prima versione del proggetto, al momento le funzionalità messe a disposizione da questo sistema sono limitate, ma in futuro la gamma di operazioni che ogni scheda può svolgere sarà più vasta.
+
+Tra le limitazioni attuali, alcune da menzionare sono:
+
+1. Le credenziali del wi-fi devono essere scritte direttamente nel codice di ogni modulo ESP8266, nonostante esso disponga della tecnologia __Smart Link__ sia per dispositivi android che IOS.
+2. Non sono supportati sensori di alcun tipo, ma si può solamente controllare lo stato di un led.
+
+Attualmente mi sto adoperando per migliorare la versione corrente ed implementare nuove funzionalità per le versioni successive
 
 </div>
