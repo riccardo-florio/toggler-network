@@ -4,7 +4,7 @@
 
 <div align="justify">
 
-L'idea è quella di usare una serie di moduli ESP8266-01S per realizzare una rete di dispositivi "smart", quali sensori, interruttori, pulsanti, e così via.
+Ho avuto a disposizione alcuni moduli ESP8266-01S e una scheda Arduino UNO, così ho deciso di intraprendere alcuni esperimenti. L'intento è quello di creare una rete di dispositivi "smart", come sensori, interruttori, pulsanti e altro ancora, sfruttando tali moduli.
 
 </div>
 
