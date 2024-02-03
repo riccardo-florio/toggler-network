@@ -20,7 +20,7 @@ La rete di sensori è gestita da un "controllore" centrale: una semplice paginet
 
 ## ⚡ Il modulo ESP8266-01S
 
-<img src="img/ESP8266-01S.jpg" align="right" alt="ESP8266" width="290">
+<img src="img/ESP8266-01S.jpg" align="right" alt="ESP8266" width="350">
 
 <div align="justify">
 
