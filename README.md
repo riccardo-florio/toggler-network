@@ -49,6 +49,10 @@ Questo è necessario in quanto per poter programmare correttamente lo ESP8266-01
 
 Si suggerisce di effettuare tale procedura solo alcuni secondi prima dell'inizio del caricamento dello sketch dal PC allo ESP8266-01.
 
+Una volta programmato corretamente il modulo, esso può essere usato come un dispositivo autonomo. Sarà sufficiente collegare GND e 3.3V ai rispettivi PIN di Arduino e il GPIO0 al GND tramite una resistenza, come illustrato di seguito:
+
+![ESP8266-01S come dispositivo autonomo](documentazione/Mio%20Schema/ESP8266-01S%20come%20dispositivo%20autonomo.png)
+
 </div>
 
 ## 🌐 Web App
