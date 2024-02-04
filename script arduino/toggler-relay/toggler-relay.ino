@@ -8,7 +8,9 @@
 const char* ssid = "iliadbox-109322";
 const char* password = "w7sbzq6wkcqnnwtbqntxhs";
 
-const char* hostname = "toggler1"; //indica toggler1.local
+// genero l'hostname in modo casuale
+int hNum = random(0, 9); //numero random tra 0 e 9
+String hostname = "toggler" + String(hNum); //indica toggler#.local (# = hNum)
 
 ESP8266WebServer server(80);
 
@@ -48,11 +50,11 @@ void getSettings() {
   doc["nm"] = WiFi.subnetMask().toString();
   doc["hostname"] = hostname;
 
-  //Serial.print(F("Stream..."));
+  Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, F("application/json"), buf);
-  //Serial.print(F("done."));
+  Serial.println(F("done."));
 }
 
 const int relayPin = 0;
@@ -75,11 +77,13 @@ void toggleLed() {
     doc["ledStatus"] = "off";
   }
 
-  //Serial.print(F("Stream..."));
+  Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, "application/json", buf);
-  //Serial.print(F("done."));
+  Serial.println(F("done."));
+  Serial.print("Stato led: ");
+  Serial.println(statoLED);
 }
 
 // void setSettings() {
@@ -190,28 +194,33 @@ void setup(void) {
   pinMode(led, OUTPUT);
   pinMode(relayPin, OUTPUT);
 
-  //Serial.begin(115200);
+  // Imposta il baut del monitor seriale a 115200, 
+  // altrimenti vedrai caratteri
+  Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  //Serial.println("");
+  Serial.println("");
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(led, on);
+    Serial.print(".");
     delay(250);
     digitalWrite(led, off);
     delay(250);
   }
-  //Serial.println("");
-  //Serial.print("Connected to ");
-  //Serial.println(ssid);
-  //Serial.print("IP address: ");
-  //Serial.println(WiFi.localIP());
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
 
   // Activate mDNS this is used to be able to connect to the server
   // with local DNS hostmane esp8266.local
   if (MDNS.begin(hostname)) {
-    //Serial.println("MDNS responder started");
+    Serial.print("MDNS responder started: ");
+    Serial.print(hostname);
+    Serial.println(".local");
   }
   MDNS.addService("http", "tcp", 80);
 
@@ -221,7 +230,7 @@ void setup(void) {
   server.onNotFound(handleNotFound);
   // Start server
   server.begin();
-  //Serial.println("HTTP server started");
+  Serial.println("HTTP server started");
 }
 
 void loop(void) {

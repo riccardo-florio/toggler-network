@@ -27,7 +27,7 @@ function togglePriv(id) {
     checkBox = document.getElementById(id);
     checkBoxStatus = !checkBox.checked;
     // chiamo l'endpoint dell'api
-    xhttp.open("GET", "http://toggler1/toggleLed", true);
+    xhttp.open("GET", `http://${id}/toggleLed`, true);
     xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
     xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhttp.send();
