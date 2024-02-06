@@ -61,7 +61,7 @@ Una volta programmato corretamente il modulo, esso può essere usato come un dis
 
 Per gestire i dispositivi ESP8266 connessi alla rete sfruttiamo la pagina web implementata nella relativa "[cartella](webapp)". È una semplice pagina HTML che richiama una serie di moduli Javascript.
 
-Quello principale è "[main.js](webapp/modules/main.js)" che opera come una sorta di interfaccia per i metodi implementati negli altri moduli. Un primo metodo, `avviaRicerca()`, si occupa di avviare la ricerca dei dispositivi collegati nella stessa rete del dispositivo su cui viene eseguita la webapp. Si noti che viene eseguito una volta sola al caricamento della pagina, ma può essere anche eseguito alla pressione del tasto di ricerca apposito. Un secondo metodo, `toggle(id)`, permette di accendere o spegnere il led (al momento l'unica funzione implementata nei moduli ESP) con id = *id*.
+Quello principale è "[main.js](webapp/modules/main.js)" che opera come una sorta di interfaccia per i metodi implementati negli altri moduli. Un primo metodo, `avviaRicerca()`, si occupa di avviare la ricerca dei dispositivi collegati nella stessa rete del dispositivo su cui viene eseguita la webapp. Si noti che viene eseguito una volta sola al caricamento della pagina, ma può essere anche eseguito alla pressione del tasto di ricerca apposito. Un secondo metodo, `toggle(id)`, permette di accendere o spegnere il led con id = *id*. Similmente, il metodo `getHumiture(id)` preleva i temperatura e percentuale di umidità dal sensore con id = *id*.
 
 È importante sapere che la web app deve necessariamente essere eseguita su un web server, altrimenti si incorre nell'errore `index.html:1 Access to script at '.../main.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: http, data, isolated-app, chrome-extension, chrome, https, chrome-untrusted.
 main.js:1` e `Failed to load resource: net::ERR_FAILED`. Ad esempio, in fase di testing ho usato l'estensione *Live Server* di Visual Studio Code.
@@ -77,7 +77,7 @@ Essendo solo una prima versione del progetto, al momento le funzionalità messe 
 Tra le limitazioni attuali, alcune da menzionare sono:
 
 1. Le credenziali del wi-fi devono essere scritte direttamente nel codice di ogni modulo ESP8266, nonostante esso disponga della tecnologia **Smart Link** sia per dispositivi Android che iOS.
-2. Non sono supportati sensori di alcun tipo, ma si può solamente controllare lo stato di un led.
+2. Tutto il sistema funziona mediante lo scambio di messaggi TCP e ciò comporta una mancanza di efficienza e una difficile gestione. In futuro, implementare un ecosistema che sfrutti lo scambio di messaggi UDP.
 
 Attualmente mi sto adoperando per migliorare la versione corrente ed implementare nuove funzionalità per le versioni successive.
 
