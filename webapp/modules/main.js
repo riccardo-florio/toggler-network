@@ -1,6 +1,6 @@
-import { cercaDispositivi, numIte } from "./dispositivi.js";
+import { cercaDispositivi } from "./dispositivi.js";
 import { gInizioRicerca } from "./grafica.js"
-import { togglePriv } from "./toggle.js";
+import { togglePriv, getHumiturePriv } from "./toggle.js";
 
 avviaRicerca();
 
@@ -13,6 +13,11 @@ function toggle(id) {
     togglePriv(id);
 }//toggle
 
+function getHumiture(id) {
+    getHumiturePriv(id)
+}//getHumiture
+
 //imposto le funzioni come globali in modo da poterle usare nell'html
 window.avviaRicerca = avviaRicerca;
 window.toggle = toggle;
+window.getHumiture = getHumiture;

@@ -24,8 +24,8 @@ function inviaRichiesta(i) {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var risp = JSON.parse(xhttp.responseText);
-            console.log(risp["hostname"]);
-            aggiungiToggler(risp["hostname"]);
+            console.log(risp["hostname"], risp["type"]);
+            aggiungiToggler(risp["hostname"], risp["type"]);
             incrementaIterazioni();
         }
     };
@@ -45,4 +45,4 @@ function incrementaIterazioni() {
     if (numIte == maxIte) gFineRicerca();
 }
 
-export { cercaDispositivi, numIte }
+export { cercaDispositivi }

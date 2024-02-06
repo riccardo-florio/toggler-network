@@ -1,5 +1,7 @@
 // In questo modulo ci si occupa di tutte le sistemazioni grafiche da operare.
 
+import { getHumiturePriv } from "./toggle.js";
+
 const spanRicerca = document.querySelector(".ricerca>span");
 const btnRicerca = document.querySelector(".ricerca>button");
 
@@ -9,7 +11,11 @@ function gInizioRicerca() {
 }
 
 function gFineRicerca() {
-    spanRicerca.innerHTML = "Ricerca completata! Premi il pulsante a destra per eseguire una nuova ricerca.";
+    if (togglersInDom.length == 0) {
+        spanRicerca.innerHTML = "Nessun dispositivo trovato ❌";
+    } else {
+        spanRicerca.innerHTML = "Ricerca completata! ✔️";
+    }
     btnRicerca.disabled = false;
 }
 
@@ -23,12 +29,39 @@ function inizializzaTogglers() {
     togglers.innerHTML = "";
 }
 
-function aggiungiToggler(toggler) {
+function aggiungiToggler(toggler, type) {
     if (!togglersInDom.includes(toggler)) {
         togglersInDom.push(toggler);
-        document.getElementsByClassName("togglers")[0].innerHTML += `
+        switch(type) {
+            case "toggler":
+              insTogglerInDom(toggler);
+              break;
+            case "humiture-sensor":
+                insHumitureSensorInDom(toggler)
+              break;
+            default:
+              // code block
+          }
+    }
+}
+
+function impostaStatoToggler(id, stato) {
+    const stp = document.querySelector("#"+id+"-cont>p");
+    stp.innerHTML = stato;
+}
+
+function impostaStatoHumitureSensor(id, temp, hum) {
+    const p1 = document.querySelector("#"+id+"-temp");
+    const p2 = document.querySelector("#"+id+"-hum");
+    p1.innerText = temp + "°C";
+    p2.innerText = hum + "%";
+}
+
+function insTogglerInDom(toggler) {
+    var name = "Toggler " + toggler.replace("toggler", "");
+    document.getElementsByClassName("togglers")[0].innerHTML += `
             <div class="toggle-container" id="${toggler}-cont">
-                <h3>${toggler}</h3>
+                <h3>${name}</h3>
                 |
                 <h4>Stato: </h4>
                 <p>Sconosciuto</p>
@@ -38,12 +71,22 @@ function aggiungiToggler(toggler) {
                 </label>
             </div>
             `
-    }
 }
 
-function impostaStatoToggler(id, stato) {
-    const stp = document.querySelector("#"+id+"-cont>p");
-    stp.innerHTML = stato;
+function insHumitureSensorInDom(toggler) {
+    var name = "Humiture " + toggler.replace("toggler", "");
+    document.getElementsByClassName("togglers")[0].innerHTML += `
+            <div class="toggle-container" id="${toggler}-cont">
+                <h3>${name}</h3>
+                |
+                <h4>Temp: </h4>
+                <p id="${toggler}-temp">(?)</p>
+                <h4>Umid: </h4>
+                <p id="${toggler}-hum">(?)</p>
+                <button onclick="getHumiture('${toggler}')">Aggiorna</button>
+            </div>
+            `
+    getHumiturePriv(toggler);
 }
 
-export {gInizioRicerca, gFineRicerca, inizializzaTogglers, aggiungiToggler, impostaStatoToggler}
+export {gInizioRicerca, gFineRicerca, inizializzaTogglers, aggiungiToggler, impostaStatoToggler, impostaStatoHumitureSensor}

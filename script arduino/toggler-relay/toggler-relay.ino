@@ -49,6 +49,7 @@ void getSettings() {
   doc["gw"] = WiFi.gatewayIP().toString();
   doc["nm"] = WiFi.subnetMask().toString();
   doc["hostname"] = hostname;
+  doc["type"] = "toggler";
 
   Serial.print(F("Stream..."));
   String buf;

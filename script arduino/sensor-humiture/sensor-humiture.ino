@@ -12,13 +12,17 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ArduinoJson.h>
+#include <SimpleDHT.h>
 
 const char* ssid = "iliadbox-109322";
 const char* password = "w7sbzq6wkcqnnwtbqntxhs";
 
-const char* hostname = "sensor1"; //indica toggler1.local
+// genero l'hostname in modo casuale
+int hNum = random(0, 9); //numero random tra 0 e 9
+String hostname = "toggler" + String(hNum); //indica toggler#.local (# = hNum)
 
 ESP8266WebServer server(80);
+SimpleDHT11 dht11;
 
 void setCrossOrigin() {
   server.sendHeader(F("Access-Control-Allow-Origin"), F("*"));
@@ -55,37 +59,49 @@ void getSettings() {
   doc["gw"] = WiFi.gatewayIP().toString();
   doc["nm"] = WiFi.subnetMask().toString();
   doc["hostname"] = hostname;
+  doc["type"] = "humiture-sensor";
 
-  //Serial.print(F("Stream..."));
+  Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, F("application/json"), buf);
-  //Serial.print(F("done."));
+  Serial.println(F("done."));
 }
 
 const int led = LED_BUILTIN;
+const int sPin = 0;
 const char on = LOW;
 const char off = HIGH;
-int statoLED = off; //all'inizio il led è spento
 
-// Serving led status after toggle
-void toggleLed() {
-  statoLED = !statoLED;
-  digitalWrite(led, statoLED);
+// Serving sensor status after measure
+void readData() {
+  //Leggo i dati dal sensore
+  byte temp = 0;
+  byte umid = 0;
 
+  int err = SimpleDHTErrSuccess;
+  if ((err = dht11.read(sPin, &temp, &umid, NULL)) != SimpleDHTErrSuccess) {
+    Serial.print("Read DHT11 failed, err=");
+    Serial.println(err);
+    delay(1000);
+    return;
+  }
+  Serial.print("Sample OK: ");
+  Serial.print((int)temp); Serial.print(" °C, ");
+  Serial.print((int)umid); Serial.println(" H");
+
+  //Metto i dati nel json
   setCrossOrigin();
   DynamicJsonDocument doc(512);
-  if (statoLED == on) {
-    doc["ledStatus"] = "on";
-  } else {
-    doc["ledStatus"] = "off";
-  }
+  doc["temp"] = (int)temp;
+  doc["umid"]=(int)umid;
 
-  //Serial.print(F("Stream..."));
+  //Invio i dati
+  Serial.print(F("Stream..."));
   String buf;
   serializeJson(doc, buf);
   server.send(200, "application/json", buf);
-  //Serial.print(F("done."));
+  Serial.println(F("done."));
 }
 
 // void setSettings() {
@@ -170,8 +186,8 @@ void restServerRouting() {
   server.on(F("/helloWorld"), HTTP_GET, getHelloWord);
   server.on(F("/settings"), HTTP_OPTIONS, sendCrossOriginHeader);
   server.on(F("/settings"), HTTP_GET, getSettings);
-  server.on(F("/toggleLed"), HTTP_OPTIONS, sendCrossOriginHeader);
-  server.on(F("/toggleLed"), HTTP_GET, toggleLed);
+  server.on(F("/readData"), HTTP_OPTIONS, sendCrossOriginHeader);
+  server.on(F("/readData"), HTTP_GET, readData);
 
   //server.on(F("/settings"), HTTP_POST, setSettings);
 }
@@ -195,28 +211,31 @@ void handleNotFound() {
 void setup(void) {
   pinMode(led, OUTPUT);
 
-  //Serial.begin(115200);
+  Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  //Serial.println("");
+  Serial.println("");
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(led, on);
+    Serial.print(".");
     delay(250);
     digitalWrite(led, off);
     delay(250);
   }
-  //Serial.println("");
-  //Serial.print("Connected to ");
-  //Serial.println(ssid);
-  //Serial.print("IP address: ");
-  //Serial.println(WiFi.localIP());
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
 
   // Activate mDNS this is used to be able to connect to the server
-  // with local DNS hostmane esp8266.local
+  // with local DNS hostmane toggler#.local
   if (MDNS.begin(hostname)) {
-    //Serial.println("MDNS responder started");
+    Serial.print("MDNS responder started: ");
+    Serial.print(hostname);
+    Serial.println(".local");
   }
   MDNS.addService("http", "tcp", 80);
 
@@ -226,7 +245,7 @@ void setup(void) {
   server.onNotFound(handleNotFound);
   // Start server
   server.begin();
-  //Serial.println("HTTP server started");
+  Serial.println("HTTP server started");
 }
 
 void loop(void) {
